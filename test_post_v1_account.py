@@ -1,11 +1,15 @@
+import pprint
+import json
 import requests
+
+# from main import response_json
 
 
 def test_post_v1_account():
     # register user
 
-    login = 'stas1009ss'
-    password = 'stas1009'
+    login = 'eeestas1'
+    password = 'eeestas1'
     email = f'{login}@mail.ru'
 
     json_data = {
@@ -18,7 +22,6 @@ def test_post_v1_account():
     print(response.status_code)
     print(response.text)
 
-
     # get registration messages via email
 
     params = {
@@ -26,24 +29,28 @@ def test_post_v1_account():
     }
 
     response = requests.get('http://5.63.153.31:5025/api/v2/messages', params=params, verify=False)
-    print(response.status_code)
-    print(response.text)
+    print('\n', response.status_code)
+    # print(response.text)
+    # pprint.pprint(response.json())
 
 
-    # Getting token
 
+    # get token
+    for item in response.json()['items']:
+        user_data = json.loads(item['Content']['Body'])
+        user_login = user_data['Login']
+        if user_login == login:
+            token = user_data['ConfirmationLinkUrl'].split('/')[-1]
+            print('token: ', token)
 
     # activate user
-
     headers = {
         'accept': 'text/plain',
     }
 
-    response = requests.put('http://5.63.153.31:5051/v1/account/552c9c40-0542-4981-b96c-6b65f117f339', headers=headers)
+    response = requests.put(f'http://5.63.153.31:5051/v1/account/{token}', headers=headers)
     print(response.status_code)
     print(response.text)
-
-
 
     # login
 
@@ -56,4 +63,3 @@ def test_post_v1_account():
     response = requests.post('http://5.63.153.31:5051/v1/account/login', headers=headers, json=json_data)
     print(response.status_code)
     print(response.text)
-
