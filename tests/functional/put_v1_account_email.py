@@ -20,7 +20,7 @@ def test_post_v1_account():
     # fake = Faker()
     # fake_name = fake.name()
 
-    login = 'fake_user012345678921'
+    login = 'fake_user012345678922'
     password = '1234567'
     email = f'{login}@mail.ru'
 
