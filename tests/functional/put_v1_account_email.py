@@ -1,5 +1,3 @@
-import time
-# from faker import Faker
 import json
 import base64
 import re
@@ -17,8 +15,6 @@ def test_put_v1_account_email():
     login_api = LoginApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
 
-    # fake = Faker()
-    # fake_name = fake.name()
 
     login = 'fake_user012345678930'
     password = '1234567'

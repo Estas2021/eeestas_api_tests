@@ -1,13 +1,23 @@
-import time
-# from faker import Faker
 import json
 import base64
 import re
+from xml.etree.ElementTree import indent
 
 from dm_api_account.apis.account_api import AccountApi
 from dm_api_account.apis.login_api import LoginApi
 from api_mailhog.apis.mailhog_api import MailhogApi
 
+import structlog
+
+structlog.configure(
+    processors=[
+        structlog.processors.JSONRenderer(
+            indent=4,
+            ensure_ascii=True,
+            sort_keys=True
+        )
+    ]
+)
 
 
 def test_post_v1_account():
@@ -16,10 +26,8 @@ def test_post_v1_account():
     login_api = LoginApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
 
-    # fake = Faker()
-    # fake_name = fake.name()
 
-    login = 'fake_user012345678924'
+    login = 'late_nighter_01'
     password = '1234567'
     email = f'{login}@mail.ru'
 
