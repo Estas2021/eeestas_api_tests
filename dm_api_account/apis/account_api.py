@@ -1,5 +1,4 @@
 from restclient.client import RestClient
-import requests
 
 
 class AccountApi(RestClient):

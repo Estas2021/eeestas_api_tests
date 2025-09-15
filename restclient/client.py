@@ -1,3 +1,4 @@
+import curlify
 from requests import (
     session,
     JSONDecodeError,
@@ -70,6 +71,9 @@ class RestClient:
         )
         # оборачиваем нашу библиотеку requests для отправки запросов и получения ответов
         rest_response = self.session.request(method=method, url=full_url,**kwargs)
+
+        curl = curlify.to_curl(rest_response.request)
+        print('\n'+ "curl запроса: ", curl, end='\n')
 
         log.msg(
             event='Response',

@@ -1,4 +1,3 @@
-import requests
 from restclient.client import RestClient
 
 
