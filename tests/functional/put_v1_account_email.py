@@ -10,7 +10,7 @@ from api_mailhog.apis.mailhog_api import MailhogApi
 
 
 
-def test_post_v1_account():
+def test_put_v1_account_email():
 
 
     account_api = AccountApi(host='http://5.63.153.31:5051')
@@ -20,7 +20,7 @@ def test_post_v1_account():
     # fake = Faker()
     # fake_name = fake.name()
 
-    login = 'fake_user012345678922'
+    login = 'fake_user012345678930'
     password = '1234567'
     email = f'{login}@mail.ru'
 
@@ -69,7 +69,6 @@ def test_post_v1_account():
     assert response.status_code == 200, f"Пользак {login} не был авторизован"
 
     # 6 change user email
-
     json_data = {
         'login': login,
         'password': password,
@@ -90,8 +89,6 @@ def test_post_v1_account():
     response = login_api.post_v1_account_login(json_data=json_data)
 
     assert response.status_code == 403, f"Пользак {login} был авторизован"
-
-
 
     # 8 На почте находим токен по новому емейлу для подтверждения смены емейла
     response = mailhog_api.get_api_v2_messages(limit=1)
