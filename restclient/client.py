@@ -1,5 +1,4 @@
 import curlify
-import pprint
 from requests import (
     session,
     JSONDecodeError,

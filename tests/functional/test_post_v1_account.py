@@ -31,7 +31,7 @@ def test_post_v1_account():
 
 
 
-    login = 'late_nighter_0999'
+    login = 'late_nighter_099999'
     password = '1234567'
     email = f'{login}@mail.ru'
 
