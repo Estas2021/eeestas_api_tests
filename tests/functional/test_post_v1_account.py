@@ -32,7 +32,7 @@ def test_post_v1_account():
 
     account_helper = AccountHelper(dm_api_account=account,mailhog=mailhog)
 
-    login = 'late_nighter_190999999999'
+    login = 'late_nighter_2009'
     password = '1234567'
     email = f'{login}@mail.ru'
 
