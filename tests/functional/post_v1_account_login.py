@@ -16,7 +16,7 @@ structlog.configure(
 )
 
 
-def test_post_v1_account():
+def test_post_v1_account_login():
     mailhog_configuration = MailhogConfiguration(host='http://5.63.153.31:5025')
     dm_api_configuration = DmApiConfiguration(host='http://5.63.153.31:5051', disable_log=False)
 
@@ -25,7 +25,7 @@ def test_post_v1_account():
 
     account_helper = AccountHelper(dm_api_account=account,mailhog=mailhog)
 
-    login = 'esv190999999875'
+    login = 'vse1919'
     password = '1234567'
     email = f'{login}@mail.ru'
 

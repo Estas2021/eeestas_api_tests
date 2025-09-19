@@ -1,4 +1,4 @@
-from retrying import retry
+
 import base64
 import json
 import re
@@ -6,7 +6,7 @@ import time
 
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
-
+from retrying import retry
 
 def retry_if_result_none(
         result
