@@ -1,28 +1,50 @@
 import base64
 import json
 import re
+import time
 
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
+
 def decode_mime(
-            encoded_string: str
-    ):
-        """
-        Decode encoded Subject message from mailbox
-        :param encoded_string:
-        :return:
-        """
-        pattern = r"=\?utf-8\?b\?(.*?)\?="
-        decoded_string = encoded_string
+        encoded_string: str,
+):
+    """
+    Decode encoded Subject message from mailbox
+    :param encoded_string:
+    :return:
+    """
+    pattern = r"=\?utf-8\?b\?(.*?)\?="
+    decoded_string = encoded_string
 
-        for match in re.findall(pattern, encoded_string):
-            decoded_part = base64.b64decode(match).decode("utf-8")
-            decoded_string = decoded_string.replace(
-                "=?utf-8?b?" + match + "?=", decoded_part
-            )
+    for match in re.findall(pattern, encoded_string):
+        decoded_part = base64.b64decode(match).decode("utf-8")
+        decoded_string = decoded_string.replace(
+            "=?utf-8?b?" + match + "?=", decoded_part
+        )
 
-        return decoded_string
+    return decoded_string
+
+
+def retry_getting_token(func):
+    def wrapper(*args,**kwargs):
+        token = None
+        count = 0
+        while token is None:
+            token = func(*args, **kwargs)
+            print(f"Попытка получения активационного токена номер {count}..")
+            count += 1
+
+            if count == 5:
+                raise AssertionError("Превышено кол-во получения активационного токена")
+            if token:
+                return token
+
+            time.sleep(1)
+
+    return wrapper
+
 
 class AccountHelper:
     def __init__(
@@ -49,10 +71,10 @@ class AccountHelper:
         response = self.dm_api_account.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, "Пользак не был зарегистрирован"
 
-        response = self.mailhog.mailhog_api.get_api_v2_messages()
-        assert response.status_code == 200, "Письма не были получены"
 
-        token = self.get_activation_token_by_login(login=login, response=response)
+        # assert response.status_code == 200, "Письма не были получены"
+
+        token = self.get_activation_token_by_login(login=login)
         assert token is not None, f"Токен для пользака {login} не был получен"
 
         response = self.dm_api_account.account_api.put_v1_account_token(token)
@@ -81,22 +103,21 @@ class AccountHelper:
 
 
 
-    @staticmethod
+    @retry_getting_token
     def get_activation_token_by_login(
+            self,
             login,
-            response
     ):
         """
         Get activation token from mailbox
         :param login:
-        :param response:
         :return:
         """
         token = None
-
+        response = self.mailhog.mailhog_api.get_api_v2_messages()
         for item in response.json()['items']:
             user_data = json.loads(item['Content']['Body'])
-            user_login = user_data['Login']
+            user_login = user_data['Login'] + '1'
 
             decoded_str = decode_mime(item['Content']['Headers']['Subject'][0])
             # print('\n'+ 'decoded_str: ', decoded_str)
