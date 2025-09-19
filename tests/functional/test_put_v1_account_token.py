@@ -25,7 +25,7 @@ def test_put_v1_account_token():
 
     account_helper = AccountHelper(dm_api_account=account,mailhog=mailhog)
 
-    login = 'vse1919'
+    login = 'vse19197'
     password = '1234567'
     email = f'{login}@mail.ru'
 
