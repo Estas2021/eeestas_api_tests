@@ -3,7 +3,6 @@ from requests import (
     session,
     JSONDecodeError,
 )
-
 import structlog
 import uuid
 
@@ -16,12 +15,24 @@ class RestClient:
             configuration: Configuration
     ):
         self.host = configuration.host
-        self.headers = configuration.headers
+        self.set_headers(configuration.headers)
         self.disable_log = configuration.disable_log
         self.session = session()                                        # зачем нужен session??
         self.log = structlog.get_logger(__name__).bind(service='api')   # инициализация лога
         #                                           ----^-----
         # bind(service='api') <-- в названии может быть bd, grpc
+
+    def set_headers(
+            self,
+            headers
+    ):
+        """
+        Для обновления заголовков сессии
+        :param headers:
+        :return:
+        """
+        if headers:
+            self.session.headers.update(headers)
 
     def post(
             self,
@@ -30,6 +41,7 @@ class RestClient:
     ):
         return self._send_request(method='POST', path=path, **kwargs)
 
+
     def get(
             self,
             path,
@@ -37,12 +49,14 @@ class RestClient:
     ):
         return self._send_request(method='GET', path=path, **kwargs)
 
+
     def put(
             self,
             path,
             **kwargs
     ):
         return self._send_request(method='PUT', path=path, **kwargs)
+
 
     def delete(
             self,
@@ -92,6 +106,7 @@ class RestClient:
         )
 
         return rest_response
+
 
     # значит функция не исп-ет функции и параметры, которые внутри класса r_r
     @staticmethod
