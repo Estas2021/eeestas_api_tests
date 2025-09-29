@@ -17,8 +17,8 @@ class RestClient:
         self.host = configuration.host
         self.set_headers(configuration.headers)
         self.disable_log = configuration.disable_log
-        self.session = session()                                        # зачем нужен session??
-        self.log = structlog.get_logger(__name__).bind(service='api')   # инициализация лога
+        self.session = session()  # зачем нужен session??
+        self.log = structlog.get_logger(__name__).bind(service='api')  # инициализация лога
         #                                           ----^-----
         # bind(service='api') <-- в названии может быть bd, grpc
 
@@ -41,14 +41,12 @@ class RestClient:
     ):
         return self._send_request(method='POST', path=path, **kwargs)
 
-
     def get(
             self,
             path,
             **kwargs
     ):
         return self._send_request(method='GET', path=path, **kwargs)
-
 
     def put(
             self,
@@ -57,14 +55,12 @@ class RestClient:
     ):
         return self._send_request(method='PUT', path=path, **kwargs)
 
-
     def delete(
             self,
             path,
             **kwargs
     ):
         return self._send_request(method='DELETE', path=path, **kwargs)
-
 
     def _send_request(
             self,
@@ -78,9 +74,8 @@ class RestClient:
 
         # Чтобы вкл/выкл лог
         if self.disable_log:
-            rest_response = self.session.request(method=method, url=full_url,**kwargs)
+            rest_response = self.session.request(method=method, url=full_url, **kwargs)
             return rest_response
-
 
         log.msg(
             event='Request',
@@ -92,10 +87,10 @@ class RestClient:
             data=kwargs.get('data')
         )
         # оборачиваем нашу библиотеку requests для отправки запросов и получения ответов
-        rest_response = self.session.request(method=method, url=full_url,**kwargs)
+        rest_response = self.session.request(method=method, url=full_url, **kwargs)
 
         curl = curlify.to_curl(rest_response.request)
-        print('\n'+ "curl запроса: ", curl)
+        print('\n' + "curl запроса: ", curl)
 
         log.msg(
             event='Response',
@@ -106,7 +101,6 @@ class RestClient:
         )
 
         return rest_response
-
 
     # значит функция не исп-ет функции и параметры, которые внутри класса r_r
     @staticmethod

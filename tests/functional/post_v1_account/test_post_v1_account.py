@@ -1,11 +1,16 @@
-
-
-
-def test_post_v1_account(account_helper, create_user):
+def test_post_v1_account(
+        account_helper,
+        create_user
+        ):
+    """
+    Register new user
+    :param account_helper:
+    :param create_user:
+    :return:
+    """
     login = create_user.login
     password = create_user.password
     email = create_user.email
-
 
     # 1 register new user
     account_helper.register_new_user(

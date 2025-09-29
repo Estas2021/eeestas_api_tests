@@ -20,11 +20,13 @@ structlog.configure(
     ]
 )
 
+
 @pytest.fixture(scope="session")
 def account_api():
     dm_api_configuration = DmApiConfiguration(host='http://5.63.153.31:5051', disable_log=False)
     account = DMApiAccount(configuration=dm_api_configuration)
     return account
+
 
 @pytest.fixture(scope="session")
 def mailhog_api():
@@ -32,20 +34,27 @@ def mailhog_api():
     mailhog = MailHogApi(configuration=mailhog_configuration)
     return mailhog
 
+
 @pytest.fixture(scope="session")
-def account_helper(account_api, mailhog_api):
-    account_helper = AccountHelper(dm_api_account=account_api,mailhog=mailhog_api)
+def account_helper(
+        account_api,
+        mailhog_api
+        ):
+    account_helper = AccountHelper(dm_api_account=account_api, mailhog=mailhog_api)
     return account_helper
 
+
 @pytest.fixture(scope="session")
-def auth_account_helper(mailhog_api):
+def auth_account_helper(
+        mailhog_api
+        ):
     dm_api_configuration = DmApiConfiguration(host='http://5.63.153.31:5051', disable_log=False)
     account = DMApiAccount(configuration=dm_api_configuration)
-    account_helper = AccountHelper(dm_api_account=account,mailhog=mailhog_api)
+    account_helper = AccountHelper(dm_api_account=account, mailhog=mailhog_api)
 
     account_helper.auth_client(
-        login= "NIGHT_RISER_2209",
-        password= "1234567"
+        login="NIGHT_RISER_29.09.25",
+        password="1234567"
     )
 
     return account_helper
@@ -61,4 +70,5 @@ def create_user():
 
     User = namedtuple('User', ['login', 'password', 'email'])
     user = User(login=login, password=password, email=email)
+
     return user
